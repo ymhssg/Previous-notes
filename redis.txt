@@ -1,0 +1,213 @@
+1.启动redis
+	redis-6.0.8 的 src 目录下
+
+	./redis-server -----启动redis服务
+                 或者
+	./redis-server ../redis.conf -----使用指定配置文件启动
+
+
+	redis-cli  命令行客户端
+	redis-server  客户端启动脚本
+	redis-sentinel  哨兵启动脚本
+
+	远程服务上执行命令
+	redis-cli -h host -p port -a password
+
+2.键
+	SET name "value"    设置名为name的key,值为value
+	GRT name     读取key
+	DEL name      删除key
+	EXISTS name     检查key是否存在
+	RENAME name new_name    修改key名
+	TYPE name    返回key储存的值类型
+
+3.string
+	SET name "value"    设置名为name的string,值为value
+	GRT name     读取字符串
+	STRLEN name  返回nameu所存储的字符串长度
+	INCR name 存储的数字值增1
+	INCRBY name plus    存储的数字值增plus
+	INCRBYFLOAT key plus   存储的数字值增给定浮点值plus
+	DECR name      存储的数字值减1
+	DECRBY name decrement     存储的数字值减decrement
+	APPEND name value         减value追加到name末尾
+
+4.哈希表
+	 HMSET name  key "value"    创建哈希表
+	 HGETALL name      显示哈希表内容
+	 HDEL name key  [field2]   返回值--被成功删除字段的数量
+	 HGETALL key     获取在哈希表中指定 key 的所有字段和值
+	 HINCRBY key field increment   哈希表 key 中的指定字段的整数值加上增量 increment 。
+	 HINCRBYFLOAT key field increment    哈希表 key 中的指定字段的浮点数值加上增量 increment 
+	 HKEYS key    获取哈希表中的所有字段
+	 HLEN key     获取哈希表中字段的数量
+	 HSET key field value   将哈希表 key 中的字段 field 的值设为 value 。
+	 HVALS key      获取哈希表中所有值。
+
+
+5.列表
+	LPUSH(RPUSH) name  redis  向列表name左(右)插入值redis
+	lpop 删除列表第一个值
+	lrange name  0 -1       输出第0个元素到第最后元素
+	lindex name   num     输出索引第num的值
+	BLPOP(BRPOP) key1 [key2 ] timeout  输出列表第一个(最后一个)元素--如果没有会等待timeout时间
+	llen key 获取列表长度
+	lrem key N value     删除n个value的值  (修剪)
+ 	lset  key index value   通过索引设置列表元素的值
+
+
+6.集合(set)----唯一无序
+	sadd key member1  member2     向集合添加一个或多个成员
+	smembers  key            列出集合myset中的所有元素
+	scard  key            获取集合的大小
+	sdiff key1 key2      返回第一个集合与其他集合之间的差异
+	sismember key value          判断value是否在key所对应的set中
+	sinter key1 key2                  返回所有集合的交集
+	smove key1 key2 value       移动元素value从key1到key2
+	srem key value1 value2       删除set中一至多个数据的值
+	srandmember key num       set中随机出num个元素
+
+7.有序集合(zset)
+	zadd key1 score1 value1    创建或增加zset的元素值，每一个元素值都包含<序号,值>
+	zrem   key member [member ...]    移除有序集合中一个或多个集合
+	zcard key                 获取有序集合的大小
+	zincrby key increment member    有序集合中对指定成员的序号加上增量 increment
+	zrange key1 start end           指定在start到end的范围内查看元素
+	zrangebyscore key1 minScore maxScore     指定序号范围内查询元素
+	zcount  key  minScore  maxScore      统计给定序号范围内的元素个数
+	zrank  key  member 返回指定成员的索引位置(因为有序，所以位置代表排名)
+	zrevrank  key  member 默认从低到高排序，逆序正好代表排名
+
+
+
+8.hyperloglog--------基数统计(不重复)
+	pfadd key element element2  ....  添加指定元素到hyperloglog中
+	pfcount key   统计给定的hyperloglog的统计数量(去重)
+
+
+9.发布订阅
+	(需要启动至少两个客户端)
+	(第一个客户端)     subscribe   runoobChat       创建了订阅频道名为 runoobChat
+	(第二个客户端)     publish   runoobChat   "Redis PUBLISH test"  将信息发布到 runoobChat频道
+
+	subscribe  channel [channel ...]订阅给定的一个或多个频道的信息。
+	unsubscribe    channel     指退订给定的频道
+
+
+
+10 事务
+	(
+	1.在触发事务命令exec前,批量操作会被放入队列缓存
+	2.事务中,任一命令执行失败,其他命令依然执行
+	3.事务执行时,其他客户端请求不会插入到事务执行命令中
+	)
+
+	multi 开始事务
+	watch key  监视一个(或多个) key ，如果在事务执行之前这个(或这些) key 被其他命令所改动，那么事务将被打断。
+	unwatch     取消 WATCH 命令对所有 key 的监视。
+
+	discard     取消事务，放弃执行事务块内的所有命令。
+	exec         执行所有事务块内的命令。
+
+
+11.脚本
+	eval  script numbers key arg 
+		eval ----执行脚本
+		script---脚本
+		number ----指定键名参数个数
+		key ---表示在脚本中所用到的那些键
+		arg ---附加参数
+	SCRIPT EXISTS   script  检验指定脚本是否被保存在缓存中
+	SCRIPT KILL   杀死正在运行lua脚本
+	SCRIPT FLUSH   从脚本缓存中移除所有脚本。
+
+	(以下两句一般搭配使用)
+	SCRIPT LOAD script    将脚本 script 添加到脚本缓存中，但并不立即执行这个脚本。返回校验码
+	EVALSHA    校验码    0       ---    执行脚本
+
+
+
+12.连接
+	auth "password"    连接到redis服务
+	ping    查看服务是否运行
+	quit    关闭当前连接
+	select index  切换指定数据库
+	echo "string"    打印字符串
+
+
+13.GEO(位置信息)
+	GEOADD name 13.361389 38.115556 "Palermo"       添加地理位置的坐标
+	geodist   name   Palermo   Catania                             计算 Palermo   Catania两个位置之间的距离。
+	
+	georadius     name 15 37 100 km                根据用户(给定的经纬度坐标)来获取指定范围内的地理位置集合。
+	georadiusbymember     name     Agrigento 100 km        根据用户(给定的位置元素)来获取指定范围内的地理位置集合。
+
+	geopos  name   Palermo                     获取地理位置的坐标
+	geohash key member [member ...]     保存地理位置的坐标。
+	
+
+
+14.stream 
+	(发布订阅 (pub/sub) 可以分发消息，但无法记录历史消息。)
+	Stream 提供了消息的持久化和主备复制功能
+
+	XADD - 添加消息到末尾	XADD key *  field  value
+	XTRIM - 对流进行修剪，限制长度       XTRIM name  MAXLEN 2
+	XDEL - 删除消息      XDEL name  id 
+	XLEN - 获取消息长度     XLEN key
+	XRANGE 获取消息列表， 遍历消息   XRANGE mystream - +遍历全部消息 XRANGE  key  start  end
+	XREAD   读取number条消息，返回消息列表key1,key2     XREAD COUNT  number  STREAMS key1  key2
+
+
+	xgroup 创建消费者组
+
+		从头开始消费:
+		XGROUP CREATE mystream consumer-group-name 0-0  
+
+		从尾部开始消费:($ ：只接受新消息，当前 Stream 消息会全部忽略)
+		XGROUP CREATE   key    group-name   $
+
+	XREADGROUP GROUP    读取消费组中的消息
+		XREADGROUP GROUP group-name consumer-name COUNT 1 STREAMS key ID
+		(组名,消费者名,数量,key,ID)
+
+
+15.数据备份与恢复
+	 SAVE 命令用于创建当前数据库的备份(该命令将在 redis 安装目录中创建dump.rdb文件)
+
+	恢复数据---只需将备份文件 (dump.rdb) 移动到 redis 安装目录并启动服务即可
+
+	 CONFIG GET dir 输出的 redis 安装目录
+	
+16.设置密码验证
+	CONFIG set requirepass "runoob"  ----设置密码为"runoob
+	CONFIG get requirepass   -----查看密码
+
+	密码使用如下
+	AUTH "runoob	---auth于检测给定的密码和配置文件中的密码是否相符。
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

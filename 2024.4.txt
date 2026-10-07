@@ -1,0 +1,107 @@
+   redis (4天)+flink(7天)  +kafka消息队列  (4天) +   nginx (4天) +部署+git  +hive  +hbase +spark(7天)
+-----------------------------------------------------------------------------------------------
+4.3-4.4     yarn 理论学习
+
+历史服务器启动与停止
+/export/server/hadoop/bin/mapred --daemon start historyserver
+
+用户命令
+-------------------------------------------
+	yarn的主要构成
+	---资源管理器rm  :  全局的资源管理器,负责资源的管理和分配
+	---节点管理器nm :  每个节点的资源和任务管理器,(向rm汇报资源使用情况,容器运行状态
+			---负责处理应用程序主控的容器运行,停止请求)
+	--应用程序主控am : 与rm通信以获得更多资源 --与nm通信,内部分配任务
+	--容器container :  YARN中的基本执行单位
+
+	yarn application [options]  应用程序状态处理
+		-----list：返回RUNNING状态的application 任务
+		-----kill <ApplicationId>：kill掉指定的应用程序
+		-----status <ApplicationId>：打印应用程序的状态。
+
+	yarn applicationattempt [options]  显示应用程序尝试的报告
+		-----list <ApplicationId>:获取到应用程序尝试的列表
+		-----status <Application Attempt Id>: 打印应用程序尝试的状态
+
+	yarn classpath  显示hadoop的jar和lib包路径
+	
+	yarn container [options]
+		-----list <Application Attempt Id>：打印应用程序尝试的Containers列表
+		-----status <ContainerId>：打印Container的状态
+
+	yarn jar 打包和运行jar文件
+
+	yarn logs -applicationId <application ID> [options]    打印container的日志
+		-----applicationId <application ID>：指定应用程序ID
+		-----appOwner <AppOwner>：应用的所有者
+		-----containerId <ContainerId>：Container Id
+
+
+	yarn node [options] #打印节点报告
+		----all  所有节点
+		----list 列出所用running状态的节点
+		----states <States>  只显示这些状态的节点信息
+		-----status <NodeId>  	显示指定节点的状态
+
+	yarn queue [options] #打印队列信息
+		-----help     #帮助
+		-----status <QueueName>  # 打印队列的状态
+
+	
+管理员命令
+------------------------------
+	daemonlog  针对指定的守护进程,获取和设置日志级别
+		-getlevel <host:httpport> <classname>            
+		#打印运行在<host:port>的守护进程的日志级别。这个命令内部会连接http://<host:port>/logLevel?log=<name>
+		
+		-setlevel <host:httpport> <classname> <level>    
+		#设置运行在<host:port>的守护进程的日志级别。这个命令内部会连接http://<host:port>/logLevel?log=<name>
+
+	yarn nodemanager #启动节点管理器
+
+	yarn proxyserver #启动web代理服务器
+
+	yarn resourcemanager [-format-state-store] #启动资源管理器
+		-format-state-store     # RMStateStore的格式. 如果过去的应用程序不再需要，则清理RMStateStore， 
+		RMStateStore仅仅在ResourceManager没有运行的时候，才运行RMStateStore
+
+
+
+	yarn rmadmin   #系统管理设置
+	很多配置,需要去搜
+
+	yarn scmadmin [options] #运行共享缓存管理客户端
+		-----help            #查看帮助
+		----runCleanerTask    #运行清理任务
+
+
+ 	sharedcachemanager
+	使用语法：yarn sharedcachemanager #启动共享缓存管理器
+
+	yarn timelineserver #启动timelineserver
+
+-----------------------------------------------------------------------------------------------
+
+
+start all.sh
+stop.all.sh
+mysql -uroot -p
+
+4.6 hive 学习(需要在hive文件夹中执行)
+
+	启动元数据管理
+	前端启动
+	后台启动
+	启动hive   bin/hive
+
+
+4.8   python安装+spark安装
+	启动pyspark(在spark目录中的bin)
+	----使用命令     ./pyspark
+
+
+`	bin/spark-submit  代码位置
+	作用: 提交指定的Spark代码到Spark环境中运行
+
+
+

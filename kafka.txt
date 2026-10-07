@@ -1,0 +1,97 @@
+kafka 消息队列(临时存储消息的组件)
+
+适用场景:
+	注册发送邮箱或者短信需要连接外部服务器---消息队列异步处理
+	流量削峰
+	日志处理
+
+1.主题(所有消息存放主题中)
+	bin/kafka-topics.sh --create --bootstrap-server localhost:2181 --replication-factor 1 --partitions 1 --topic test
+	
+	--bootstrap-server  [ip:port]    连接的Kafka Broker主机名称和端口号(必备)
+	--create    创建主题
+	--delete    删除主题
+	--alter    修改主题
+	--list    查看所有主题
+	--replication-factor: 每个分区的副本数量。(可省)
+	--partitions: 分区的数量。(可省)
+	--topic: 指定新创建的topic的名称
+	
+	查看所有topic
+	bin/kafka-topics.sh  --bootstrap-server localhost:2181 --list
+	删除topic
+	bin/kafka-topics.sh --bootstrap-server [ip:port] --topic [topicName] --delete
+
+
+2.生产者的命令脚本是 kafka-console-producer.sh
+	bin/kafka-console-producer.sh --bootstrap-server [ip:port] --topic [topicName]
+
+
+3.消费者的命令脚本是 kafka-console-consumer.sh
+	bin/kafka-console-consumer.sh --bootstrap-server [ip:port] --topic [topicName]
+
+
+
+4.分片和副本
+	分片:对topic的划分,实现消息数据分布式储存(解决容量)
+	副本:对topic下的每一个分片,可以将分片的数据通过副本存储多份(解决存储高可用)
+
+
+
+
+---------------------------------------------------------------------------------------
+pykafka
+ 
+
+1.生产者代码
+	from kafka import KafkaProducer
+	from kafka.errors import KafkaError
+
+	#设置主机名称和端口号
+	producer = KafkaProducer(bootstrap_servers=['broker1:1234'])
+	#同步方式(直接发送)
+	future = producer.send('my-topic', b'raw_bytes').get()
+	#异步方式(缓存池发送)
+	future = producer.send('my-topic', b'raw_bytes')
+	#缓存池刷新
+	producer.flush()
+	#关闭生产者
+	producer.close()
+
+
+
+2.消费者代码
+	from kafka import KafkaConsumer
+
+	consumer = KafkaConsumer(
+		'my-topic',	#主题名称
+                        	group_id='my-group',	#消费者组id
+                         	bootstrap_servers=['localhost:9092']	#设置主机名称和端口号
+	)
+
+
+	for message in consumer:
+  
+    	print ("%s:%d:%d: key=%s value=%s" %
+		 (
+			message.topic,    	#主题
+			message.partition,	#分片
+                                          	message.offset, 	#偏移量
+			message.key,	#消息key
+                                         	 message.value	#消息value
+		    )
+	         )
+	consumer.close()
+
+ 
+
+
+
+
+
+
+
+
+
+
+

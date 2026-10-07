@@ -1,0 +1,241 @@
+1.爬虫混淆
+	base64加密
+	Btoa()-将Unicode字符串转换为一个Base64字符串,也就是把DOMString转换为预定义字符集base64中的字符
+	----------
+	eval混淆 
+	eval(string) ，可计算某个字符串，并执行其中的的 JavaScript 代码。 有返回值
+
+	----------
+	AAEncode混淆（表情包加密）
+	用于加密js
+	解决方法：
+    		1.控制台，增删代码，让其报错，即可在虚拟机（VM）处看见源码
+    		2.在线调试，在 AAEncode 代码第一行下断点，然后一步一步执行，最终也会在虚拟机（VM）里看到源码
+	----------
+	JJEncode混淆
+	解决方法：
+    		1.控制台，增删代码，让其报错，即可在虚拟机（VM）处看见源码
+    		2.在线调试，在 AAEncode 代码第一行下断点，然后一步一步执行，最终也会在虚拟机（VM）里看到源码
+	----------
+	jsfuck混淆
+	jsfuck它仅仅使用6种符号来编写代码。它们分别是(、)、+、[、]、!
+	解决方法：
+		1.如果是非虚拟机的数字/字符串加密使用解密工具：https://www.sojson.com/jsfuck.html
+    		2.上述解决不了只能一段一段手动控制台复制得结果
+    		3.如果是虚拟机加密，让其强制报错（例如在结尾最后让其加个'1'）
+	---------
+	ob混淆
+
+
+---------------------------------------------
+在ajax中数据是加密数据
+-----------------------
+	标准算法解密----- 一定要是实例对象当中的实例方法 -----decrypt(
+	步骤1--请求密文数据request.post()
+	步骤2--读取js文件,将密文数据导入
+		with open('./demo1.js','r') as f:
+			js_file = f.read()
+		ctx = execjs.compile(js.file)
+		print(ctx)//得到解密后数据		
+
+------------------------
+		---------带有关键字-------去搜关键字在js文件
+------------------------
+	json
+	1.json.parse()数据类型转换,不具备解秘功能
+`	2.json.parse(嵌套一个解密的方法或者函数(密文)
+		
+		-----------搜索JSON.parse(
+
+	
+
+-------------------------------------------------------------
+2.cookie 加密
+
+
+-------------------------------------------------------------------------------------------------------
+mysql
+
+聚合函数结果作为筛选条件时，不能用where，而是用having语法
+
+
+x = www.xxx.com 
+substring_index(x,".",1) ------------www
+substring_index(x,".",2) ------------www.xxx
+substring_index(  substring_index(x,",",2)  ,  ","  , -1  ) -------xxx
+
+-------------------
+普通查询
+SELECT column1, column2, ...
+FROM table_name
+[WHERE condition]
+[ORDER BY column_name [ASC | DESC]]
+[LIMIT number];
+
+---------------------
+like
+LIKE 子句是在 WHERE 子句中进行模糊匹配的关键字
+% 通配符表示零个或多个字符
+_ 通配符表示一个字符
+
+
+-----------------------
+union
+ UNION 操作符用于连接两个以上的 SELECT 语句的结果组合到一个结果集合，并去除重复的行
+
+-------------
+分组
+	SELECT name, SUM(signin) as signin_count FROM  employee_tbl GROUP BY name WITH ROLLUP;
+WITH ROLLUP 可以实现在分组统计数据基础上再进行相同的统计（SUM,AVG,COUNT…）
+
+-------------------------    
+ INNER JOIN（内连接）：获取两个表中字段匹配关系的记录。
+ LEFT JOIN（左连接）：获取左表所有记录，即使右表没有对应匹配的记录。
+ RIGHT JOIN（右连接）： 与 LEFT JOIN 相反，用于获取右表所有记录，即使左表没有对应匹配的记录。
+
+------------------------
+MySQL 中处理 NULL 值
+	1.检查是否为 NULL：要检查某列是否为 NULL，可以使用 IS NULL 或 IS NOT NULL 条件
+	2.COALESCE 函数可以用于替换为 NULL 的值，它接受多个参数，返回参数列表中的第一个非 NULL 值
+	            SELECT   product_name  ,   COALESCE(stock_quantity, 0)   AS   actual_quantity  FROM   products;
+	3.IFNULL 函数是 COALESCE 的 MySQL 特定版本，它接受两个参数，如果第一个参数为 NULL，则返回第二个参数。
+	            SELECT   product_name,   IFNULL(stock_quantity, 0)    AS  actual_quantity   FROM     products;
+	4.NULL 排序：在使用 ORDER BY 子句进行排序时，NULL 值默认会被放在排序的最后
+	5. 使用 <=> 操作符进行 NULL 比较：<=> 操作符对于 NULL 值的比较也会返回 TRUE。它可以用于处理 NULL 值的等值比较。
+	            SELECT * FROM employees WHERE commission <=> NULL;
+
+------------------------------
+REGEXP 是用于进行正则表达式匹配的运算符
+	SELECT name FROM person_tbl WHERE name REGEXP '^st';
+RLIKE 和 REGEXP 可以互换使用，没有区别
+
+-------------------------------
+事务
+BEGIN 或 START TRANSACTION ----------开启一个事务
+COMMIT 也可以使用 COMMIT WORK----------COMMIT 会提交事务
+ROLLBACK 也可以使用 ROLLBACK WORK--------回滚会结束用户的事务，并撤销正在进行的所有未提交的修改
+SAVEPOINT identifier-------------在事务中创建一个保存点
+RELEASE SAVEPOINT identifier --------------删除一个事务的保存点
+ROLLBACK TO identifier -------------把事务回滚到标记点
+SET TRANSACTION -------------设置事务的隔离级别
+(READ UNCOMMITTED、READ COMMITTED、REPEATABLE READ 和 SERIALIZABLE)
+
+
+-----------------------------
+ALTER 命令-----------用于修改数据库、表和索引等对象的结构
+
+ 添加列
+	ALTER TABLE table_name
+	ADD COLUMN   new_column_name   datatype;
+
+修改列的数据类型
+	ALTER TABLE   table_name
+	MODIFY COLUMN   column_name   datatype;
+
+
+修改列名
+	ALTER TABLE      table_name
+	CHANGE   COLUMN   old_column_name     new_column_name        datatype;
+
+ 删除列
+	ALTER   TABLE     table_name
+	DROP  COLUMN   column_name;
+
+
+ 添加 PRIMARY KEY(主键)
+	ALTER   TABLE   table_name
+	ADD   PRIMARY  KEY   (column_name);
+
+ 修改表名
+	ALTER   TABLE  old_table_name
+	RENAME  TO   new_table_name;
+
+------------------------------
+普通索引
+	创建索引
+	CREATE INDEX index_name
+	ON table_name (column1 [ASC|DESC], column2 [ASC|DESC], ...);
+
+	添加索引
+	ALTER TABLE table_name
+	ADD   INDEX   index_name    (column1 [ASC|DESC]  ,   column2 [ASC|DESC] ,   ...);
+
+
+	删除索引
+	1.    DROP INDEX index_name ON table_name;
+
+	2.    ALTER TABLE table_name
+	       DROP INDEX index_name;
+
+唯一索引
+	CREATE UNIQUE INDEX 语句来创建唯一索引
+
+	创建索引
+	1.
+	CREATE   UNIQUE  INDEX  index_name
+	ON  table_name  (column1 [ASC|DESC], column2 [ASC|DESC], ...);
+	
+	2.
+	ALTER  table  mytable 
+	ADD  CONSTRAINT  unique_constraint_name  UNIQUE (column1, column2, ...);
+
+	注意:unique_constraint_name : 指定要创建的唯一索引的名称
+
+-------------------------------------
+临时表
+临时表是一种在当前会话中存在的表，它在会话结束时会自动被销毁。
+	
+	创建临时表
+	CREATE TEMPORARY TABLE temp_table_name (
+  	column1 datatype,
+ 	column2 datatype,
+ 	 ...
+	);
+
+	删除临时表
+	DROP TEMPORARY TABLE IF EXISTS temp_table_name;
+
+-----------------------------------------
+复制表
+	 SHOW CREATE TABLE 命令获取创建数据表(CREATE TABLE) 语句
+	修改数据表名，并执行SQL语句，通过以上命令 将完全的复制数据表结构
+	复制表的内容	
+		 INSERT INTO clone_tbl (runoob_id,
+   	 ->                        runoob_title,
+    	->                        runoob_author,
+    	->                        submission_date)
+   	 -> SELECT runoob_id,runoob_title,
+   	 ->        runoob_author,submission_date
+    	-> FROM runoob_tbl;
+
+---------------------------------
+序列
+	 AUTO_INCREMENT 属性用于指定表中某一列的自增性。
+	CREATE TABLE example_table (
+   	 id INT AUTO_INCREMENT PRIMARY KEY,
+   	 name VARCHAR(50)
+	);
+	
+	重置序列
+	删除了数据表中的多条记录，并希望对剩下数据的 AUTO_INCREMENT 列进行重新排列，那么你可以通过删除自增的列，然后重新添加来实现
+	mysql> ALTER TABLE insect DROP id;
+	mysql> ALTER TABLE insect
+    	-> ADD id INT UNSIGNED NOT NULL AUTO_INCREMENT FIRST,
+    	-> ADD PRIMARY KEY (id);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

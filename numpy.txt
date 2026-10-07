@@ -1,0 +1,84 @@
+
+---------------创建数组----------
+创建自定义数组
+numpy.array(object, dtype = None, copy = True, order = None, subok = False, ndmin = 0)
+	object 	数组或嵌套的数列
+	dtype 	数组元素的数据类型，可选
+	copy 	对象是否需要复制，可选
+	ndmin 	指定生成数组的最小维度
+
+
+创建未初始化的数组
+numpy.empty(shape, dtype = float, order = 'C')-----创建一个指定（shape）、（dtype）且未初始化的数组
+	shape 	数组形状
+	dtype 	数据类型，可选
+
+
+从已有的数组创建数组
+numpy.asarray(a, dtype = None, order = None)
+
+
+从数值范围创建数组
+numpy.arange(start, stop, step, dtype)
+
+
+创建一个一维数组，数组是一个等差数列构成的
+np.linspace(start, stop, num=50, endpoint=True, retstep=False, dtype=None)
+	endpoint 	该值为 true 时，数列中包含stop值，默认是True。
+	retstep 	如果为 True 时，生成的数组中会显示间距
+
+
+创建一个于等比数列
+np.logspace(start, stop, num=50, endpoint=True, base=10.0, dtype=None)
+	base 	对数 log 的底数。
+
+
+
+----------------数组属性------------------
+
+numpy.dtype(object, align, copy)
+	object - 要转换为的数据类型对象
+
+ndarray.ndim 	秩，即轴的数量或维度的数量
+
+reshape 函数来调整数组大小
+	b=a.reshape(2,4,3)  # b 现在拥有三个维度,2行4列
+
+---------------数组索引-------------------
+方式一:
+	b = a[2:7:2]      print(b)
+
+方式二:
+	内置的 slice 函数，并设置 start, stop 及 step 参数
+	a = np.arange(10)
+	s = slice(2,7,2)  
+	print (a[s])
+
+
+省略号 …，来使选择元组的长度与数组的维度相同
+	a = np.array([[1,2,3],[3,4,5],[4,5,6]])  
+	print (a[...,1])   # 第2列元素
+	print (a[1,...])   # 第2行元素
+	print (a[...,1:])  # 第2列及剩下的所有元素
+
+--------------------------迭代数组 ---nditer()-------------------------------
+
+灵活访问一个或者多个数组元素--------------np.nditer()
+
+np.nditer(a, order='F') : Fortran order，即是列序优先；
+for x in np.nditer(a.T, order='C') : C order，即是行序优先；
+	a = np.arange(6).reshape(2,3)
+	for x in np.nditer(a):
+    		print (x, end=", " )
+	print ('\n')
+
+	0, 1, 2, 3, 4, 5, 
+
+nditer 对象有另一个可选参数 op_flags
+	实现对数组元素值的修改,必须指定 readwrite 或者 writeonly 的模式。
+
+
+
+
+
+
